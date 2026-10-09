@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "roc_auc": 1.0,
+  "confusion_matrix": [
+    [
+      1479,
+      0
+    ],
+    [
+      0,
+      5
+    ]
+  ],
+  "test_windows": 1484,
+  "train_windows": 3462
+}

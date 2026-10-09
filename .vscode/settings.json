@@ -1,0 +1,5 @@
+{
+  "github-actions.remoteName": "origin",
+  "github-actions.workflows.pinnedVersionWarning": "off",
+  "yaml.validate": false
+}

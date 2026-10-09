@@ -1,0 +1,22 @@
+{
+  "version": 3,
+  "dataset_type": "hybrid",
+  "trained_at": "2026-10-09T09:32:54.496042+00:00",
+  "train_windows": 3128,
+  "test_windows": 1341,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "roc_auc": 1.0,
+  "false_positive_rate": 0.0,
+  "confusion_matrix": [
+    [
+      1335,
+      0
+    ],
+    [
+      0,
+      6
+    ]
+  ]
+}
