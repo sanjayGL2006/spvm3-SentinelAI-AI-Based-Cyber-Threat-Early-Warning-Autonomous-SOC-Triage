@@ -1,0 +1,12 @@
+asset_name,service
+Payment Gateway,Payments
+Payment DB,Payments
+Customer Portal,Online Banking
+Mobile API,Online Banking
+Core Banking App,Online Banking
+HR Database,Human Resources
+Payroll System,Human Resources
+Email Server,Corporate IT
+Active Directory,Corporate IT
+SSO Provider,Corporate IT
+Analytics Warehouse,Data and Analytics

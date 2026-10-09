@@ -1,0 +1,32 @@
+external_key,name,asset_type,criticality,internet_exposed,owner
+A-001,Payment Gateway,server,5,yes,payments-team
+A-002,Payment DB,database,5,no,payments-team
+A-003,Customer Portal,web app,4,yes,web-team
+A-004,Mobile API,api,4,yes,web-team
+A-005,Core Banking App,application,5,no,core-it
+A-006,HR Database,database,4,no,hr-it
+A-007,Payroll System,application,4,no,hr-it
+A-008,Email Server,server,3,yes,it-ops
+A-009,VPN Gateway,network,4,yes,netops
+A-010,Edge Firewall,network,5,yes,netops
+A-011,Active Directory,identity,5,no,it-ops
+A-012,SSO Provider,identity,5,yes,it-ops
+A-013,Backup Vault,storage,4,no,
+A-014,Analytics Warehouse,database,3,no,data-team
+A-015,Marketing Website,web app,2,yes,marketing
+A-016,Dev Build Server,server,2,no,dev-team
+A-017,Test Server,server,1,no,qa-team
+A-018,Office Laptop Pool,endpoint,2,no,
+A-019,Executive Laptops,endpoint,3,no,it-ops
+A-020,File Server,server,3,no,it-ops
+A-021,Cloud Storage Bucket,cloud,4,yes,cloud-team
+A-022,Kubernetes Cluster,cloud,4,no,cloud-team
+A-023,CRM System,application,3,yes,sales-ops
+A-024,Customer Support Desk,application,2,yes,support
+A-025,Print Server,server,1,no,
+A-026,CCTV Network,iot,2,no,facilities
+A-027,Partner SFTP,server,3,yes,integration
+A-028,Log Server (SIEM),server,4,no,secops
+A-029,Code Repository,application,4,yes,dev-team
+A-030,Corporate Wi-Fi,network,2,no,netops
+A-031,Payment Gateway,server,5,yes,payments-team

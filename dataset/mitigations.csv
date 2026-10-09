@@ -1,0 +1,11 @@
+name,cost_inr,scenario,reduction_pct,prerequisite,excludes,mandatory
+Enforce MFA for all admins,300000,Privileged account compromise,0.45,,,False
+Deploy EDR on all endpoints,900000,Ransomware on payment service,0.35,,,False
+Network segmentation of payment zone,1800000,Ransomware on payment service,0.4,,,False
+Privileged access management (PAM),1500000,Privileged account compromise,0.35,Enforce MFA for all admins,,False
+Web application firewall,600000,Customer data exposure via web app,0.3,,,False
+Fix critical web vulnerabilities (patch sprint),400000,Customer data exposure via web app,0.4,,,False
+Cloud security posture management,700000,Cloud storage misconfiguration leak,0.5,,,False
+Email security and phishing training,350000,Phishing leading to credential theft,0.4,,,False
+Vendor risk assessment program,450000,Third-party (partner SFTP) breach,0.3,,,False
+Immutable offline backups,500000,Ransomware on payment service,0.25,,Network segmentation of payment zone,True

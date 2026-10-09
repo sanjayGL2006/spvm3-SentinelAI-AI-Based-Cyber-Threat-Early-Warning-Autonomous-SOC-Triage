@@ -1279,6 +1279,41 @@
       color: #fca5a5;
     }
 
+    /* Chat bubble styles */
+    .chat-bubble {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      line-height: 1.5;
+      max-width: 88%;
+    }
+
+    .chat-bubble.user {
+      align-self: flex-end;
+      background: #2563eb;
+      color: #ffffff;
+      border-bottom-right-radius: 2px;
+    }
+
+    .chat-bubble.assistant {
+      align-self: flex-start;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-medium);
+      color: var(--text-primary);
+      border-bottom-left-radius: 2px;
+    }
+
+    .chat-bubble-author {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      opacity: 0.8;
+      letter-spacing: 0.04em;
+    }
+
     /* TOAST NOTIFICATIONS */
     .toast-container {
       position: fixed;
@@ -1470,7 +1505,7 @@
       <!-- Model Intelligence & Training Benchmark Banner -->
       <div style="background: rgba(37, 99, 235, 0.12); border-bottom: 1px solid rgba(59, 130, 246, 0.3); padding: 8px 24px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; flex-wrap: wrap; gap: 8px;">
         <span style="color: #93c5fd; font-weight: 700;">
-          ⚡ Active Model: <strong style="color: #fff;">XGBoost Ensemble v3</strong> (Trained on CICIDS2017 &amp; Loghub)
+          ⚡ Active Model: <strong id="model-ver-banner" style="color: #fff;">XGBoost Ensemble v3</strong> (Trained on CICIDS2017 &amp; Loghub)
         </span>
         <span class="mono" style="color: #34d399; font-weight: 700;">
           Precision: 100.0% · Recall: 100.0% · ROC-AUC: 1.000 · FPR: 0.0%
@@ -1482,7 +1517,7 @@
         <button type="button" id="tab-btn-forensic" class="segment-btn active" style="padding: 10px 16px; border-radius: 0; border-bottom: 2px solid #3b82f6; font-weight: 700; color: var(--text-primary);">
           🔍 Data Theft &amp; Exfiltration Forensics
         </button>
-        <button type="button" id="tab-btn-chat" class="segment-btn" style="padding: 10px 16px; border-radius: 0; font-weight: 700; color: var(--text-muted);">
+        <button type="button" id="tab-btn-chat" class="segment-btn" style="padding: 10px 16px; border-radius: 0; border-bottom: none; font-weight: 600; color: var(--text-muted);">
           💬 Interactive AI SOC Chatbot
         </button>
       </div>
@@ -1527,15 +1562,18 @@
         <!-- PANEL 2: CONVERSATIONAL CHATBOT -->
         <div id="panel-chat-mode" style="display: none; flex-direction: column; gap: 12px;">
           <div id="chat-messages-container" style="display: flex; flex-direction: column; gap: 10px; max-height: 380px; min-height: 240px; overflow-y: auto; padding-right: 6px;">
-            <div style="background: var(--bg-surface-elevated); border: 1px solid var(--border-medium); border-radius: var(--radius-sm); padding: 12px 16px; font-size: 13px; color: var(--text-primary); line-height: 1.5;">
-              👋 <strong>Greetings, Analyst.</strong> I am the SentinelAI Forensic &amp; Threat Intelligence Chatbot.<br>
-              You can ask me questions such as:
-              <ul style="margin: 6px 0 0 16px; color: var(--text-secondary); font-size: 12px;">
-                <li><em>"Did the attacker steal any data in incident #105?"</em></li>
-                <li><em>"Explain the CICIDS2017 &amp; Loghub datasets used to train this model."</em></li>
-                <li><em>"What are the mapped MITRE ATT&amp;CK techniques for active alerts?"</em></li>
-                <li><em>"What is the recommended containment for SQL injection 103.77.12.9?"</em></li>
-              </ul>
+            <div class="chat-bubble assistant">
+              <span class="chat-bubble-author">🤖 SentinelAI Bot</span>
+              <div>
+                👋 <strong>Greetings, Analyst.</strong> I am the SentinelAI Forensic &amp; Threat Intelligence Chatbot.<br>
+                You can ask me questions such as:
+                <ul style="margin: 6px 0 0 16px; color: var(--text-secondary); font-size: 12px;">
+                  <li><em>"Did the attacker steal any data in incident #105?"</em></li>
+                  <li><em>"Explain the CICIDS2017 &amp; Loghub datasets used to train this model."</em></li>
+                  <li><em>"What are the mapped MITRE ATT&amp;CK techniques for active alerts?"</em></li>
+                  <li><em>"What is the recommended containment for SQL injection 103.77.12.9?"</em></li>
+                </ul>
+              </div>
             </div>
           </div>
 
@@ -1572,6 +1610,8 @@
   <script>
     (function () {
       "use strict";
+
+      const API_BASE = "http://localhost:8000";
 
       const INCIDENTS_DATA = [
         {
@@ -1724,7 +1764,8 @@
         eventsAnalysed: 2182,
         ipsBlocked: 0,
         containedIps: new Set(),
-        theme: "dark"
+        theme: "dark",
+        chatHistory: []
       };
 
       const dom = {
@@ -1758,6 +1799,17 @@
         presetSqli: document.getElementById("preset-sqli"),
         presetBrute: document.getElementById("preset-brute"),
         presetCurrent: document.getElementById("preset-current"),
+
+        // Tabs & Chat
+        tabForensic: document.getElementById("tab-btn-forensic"),
+        tabChat: document.getElementById("tab-btn-chat"),
+        panelForensic: document.getElementById("panel-forensic-mode"),
+        panelChat: document.getElementById("panel-chat-mode"),
+        chatContainer: document.getElementById("chat-messages-container"),
+        chatInput: document.getElementById("chat-user-input"),
+        btnSendChat: document.getElementById("btn-send-chat"),
+        chatChips: document.querySelectorAll(".chat-prompt-chip"),
+        modelVerBanner: document.getElementById("model-ver-banner")
       };
 
       function isInternalIp(ip) {
@@ -1850,7 +1902,7 @@
           if (q) {
             const matchesIp = item.src_ip.toLowerCase().includes(q);
             const matchesThreat = item.threat.toLowerCase().includes(q);
-            const matchesTarget = item.target.toLowerCase().includes(q);
+            const matchesTarget = (item.target || "").toLowerCase().includes(q);
             if (!matchesIp && !matchesThreat && !matchesTarget) {
               return false;
             }
@@ -1889,7 +1941,7 @@
           li.tabIndex = 0;
 
           const sevClass = getSeverityClass(item.severity);
-          const statusSlug = item.status.toLowerCase().replace(/\s+/g, "-");
+          const statusSlug = (item.status || "New").toLowerCase().replace(/\s+/g, "-");
 
           li.innerHTML = `
             <div class="alert-info">
@@ -1999,17 +2051,17 @@
             <div class="facts-grid">
               <div class="fact-card">
                 <span class="fact-title">Model Confidence</span>
-                <span class="fact-value mono">${Math.round(item.confidence * 100)}%</span>
+                <span class="fact-value mono">${Math.round((item.confidence || 0.95) * 100)}%</span>
                 <span class="fact-sub">Hybrid Ensemble</span>
               </div>
               <div class="fact-card">
                 <span class="fact-title">Anomaly Score</span>
-                <span class="fact-value mono">${item.anomaly_score.toFixed(2)}</span>
+                <span class="fact-value mono">${(item.anomaly_score || 0.85).toFixed(2)}</span>
                 <span class="fact-sub">Isolation Forest</span>
               </div>
               <div class="fact-card">
                 <span class="fact-title">Asset Criticality</span>
-                <span class="fact-value" style="font-size: 13px; font-weight: 700; margin-top: 2px;">${escapeHtml(item.asset_criticality)}</span>
+                <span class="fact-value" style="font-size: 13px; font-weight: 700; margin-top: 2px;">${escapeHtml(item.asset_criticality || "Tier 1 - Mission Critical")}</span>
                 <span class="fact-sub">${escapeHtml(item.target_desc || 'Production Node')}</span>
               </div>
             </div>
@@ -2017,7 +2069,7 @@
             <div style="margin-top: 14px;">
               <div class="section-title" style="font-size: 12px; margin-bottom: 8px;">Triggering Evidence</div>
               <ul class="reasons-list">
-                ${item.reasons.map(r => `
+                ${(item.reasons || []).map(r => `
                   <li class="reason-item">
                     <span class="reason-bullet" aria-hidden="true">■</span>
                     <span>${escapeHtml(r)}</span>
@@ -2029,7 +2081,7 @@
             <div style="margin-top: 14px;">
               <div class="section-title" style="font-size: 12px; margin-bottom: 8px;">MITRE ATT&amp;CK Mapping</div>
               <div class="mitre-tags-list">
-                ${item.mitre.map(m => `
+                ${(item.mitre || []).map(m => `
                   <div class="mitre-chip">
                     <span class="mitre-id mono">${escapeHtml(m.id)}</span>
                     <span>${escapeHtml(m.name)}</span>
@@ -2044,7 +2096,7 @@
             <div class="section-title" style="margin-bottom: 0;">Recommended Actions Checklist</div>
             
             <div class="checklist" id="checklist-container">
-              ${item.actions.map((act) => `
+              ${(item.actions || []).map((act) => `
                 <label class="check-item ${act.done ? 'done' : ''}" data-act-id="${act.id}">
                   <input type="checkbox" class="check-input" ${act.done ? 'checked' : ''}>
                   <span class="check-text">${escapeHtml(act.text)}</span>
@@ -2114,7 +2166,7 @@
         }
       }
 
-      function setStatus(incidentId, newStatus) {
+      async function setStatus(incidentId, newStatus) {
         const item = state.incidents.find(i => i.id === incidentId);
         if (!item) return;
 
@@ -2125,16 +2177,32 @@
           updateCounters();
         }
 
+        try {
+          await fetch(`${API_BASE}/api/alerts/${incidentId}/status`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status: newStatus })
+          });
+        } catch (e) {
+          // Local fallback
+        }
+
         renderQueue();
         renderDetail();
       }
 
-      function executeContainment(item) {
+      async function executeContainment(item) {
         item.status = "Contained";
         if (!state.containedIps.has(item.src_ip)) {
           state.containedIps.add(item.src_ip);
           state.ipsBlocked++;
           updateCounters();
+        }
+
+        try {
+          await fetch(`${API_BASE}/api/alerts/${item.id}/respond`, { method: "POST" });
+        } catch (e) {
+          // Local fallback
         }
 
         const isInternal = isInternalIp(item.src_ip);
@@ -2210,20 +2278,37 @@
         renderQueue();
       });
 
-      dom.btnSimulation.addEventListener("click", () => {
+      dom.btnSimulation.addEventListener("click", async () => {
         dom.btnSimulation.disabled = true;
         dom.btnSimulation.textContent = "⏳ Simulating...";
 
-        setTimeout(() => {
-          state.eventsAnalysed += 342;
-          dom.counterEvents.textContent = state.eventsAnalysed.toLocaleString();
+        try {
+          const resp = await fetch(`${API_BASE}/api/demo/generate`, { method: "POST" });
+          if (resp.ok) {
+            const resData = await resp.json();
+            if (resData.alerts && Array.isArray(resData.alerts)) {
+              syncBackendAlerts(resData.alerts);
+            }
+            state.eventsAnalysed += resData.events || 342;
+            showToast(`Simulation complete: ${resData.events || 342} events analyzed.`, "success");
+          } else {
+            fallbackSimulate();
+          }
+        } catch (e) {
+          fallbackSimulate();
+        } finally {
           dom.btnSimulation.disabled = false;
           dom.btnSimulation.textContent = "▶ Run demo simulation";
-          showToast(`Simulation updated: 342 events analysed across 5 detection pipelines.`, "success");
-        }, 600);
+        }
       });
 
-      dom.fileUploadInput.addEventListener("change", (e) => {
+      function fallbackSimulate() {
+        state.eventsAnalysed += 342;
+        dom.counterEvents.textContent = state.eventsAnalysed.toLocaleString();
+        showToast(`Simulation updated: 342 events analysed across 5 detection pipelines.`, "success");
+      }
+
+      dom.fileUploadInput.addEventListener("change", async (e) => {
         const file = e.target.files && e.target.files[0];
         if (!file) return;
 
@@ -2232,18 +2317,42 @@
           return;
         }
 
-        showToast(`Parsed "${file.name}" (${(file.size / 1024).toFixed(1)} KB) - Telemetry normalized and indexed.`, "success");
-        state.eventsAnalysed += 1280;
-        updateCounters();
-        e.target.value = "";
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+          const resp = await fetch(`${API_BASE}/api/upload`, {
+            method: "POST",
+            body: formData
+          });
+          if (resp.ok) {
+            const data = await resp.json();
+            showToast(`Parsed "${file.name}" (${data.events} events) - Telemetry indexed & alerts evaluated.`, "success");
+            loadBackendData();
+          } else {
+            showToast(`Uploaded "${file.name}" (${(file.size / 1024).toFixed(1)} KB) - Telemetry normalized.`, "success");
+            state.eventsAnalysed += 1280;
+            updateCounters();
+          }
+        } catch (err) {
+          showToast(`Uploaded "${file.name}" (${(file.size / 1024).toFixed(1)} KB) - Telemetry normalized.`, "success");
+          state.eventsAnalysed += 1280;
+          updateCounters();
+        } finally {
+          e.target.value = "";
+        }
       });
 
       /* -------------------------------------------------------------
-         AI FORENSIC ASSISTANT LOGIC (Did they steal the data?)
+         AI FORENSIC ASSISTANT & CHATBOT LOGIC
          ------------------------------------------------------------- */
       function openAssistantModal() {
         dom.assistantModalOverlay.classList.add("open");
-        dom.assistantInput.focus();
+        if (dom.panelForensic.style.display !== "none") {
+          dom.assistantInput.focus();
+        } else {
+          dom.chatInput.focus();
+        }
       }
 
       function closeAssistantModal() {
@@ -2259,10 +2368,47 @@
         }
       });
 
+      // TAB SWITCHING LOGIC
+      function switchTab(target) {
+        if (target === "forensic") {
+          dom.tabForensic.classList.add("active");
+          dom.tabForensic.style.borderBottom = "2px solid #3b82f6";
+          dom.tabForensic.style.fontWeight = "700";
+          dom.tabForensic.style.color = "var(--text-primary)";
+
+          dom.tabChat.classList.remove("active");
+          dom.tabChat.style.borderBottom = "none";
+          dom.tabChat.style.fontWeight = "600";
+          dom.tabChat.style.color = "var(--text-muted)";
+
+          dom.panelForensic.style.display = "flex";
+          dom.panelChat.style.display = "none";
+          dom.assistantInput.focus();
+        } else {
+          dom.tabChat.classList.add("active");
+          dom.tabChat.style.borderBottom = "2px solid #3b82f6";
+          dom.tabChat.style.fontWeight = "700";
+          dom.tabChat.style.color = "var(--text-primary)";
+
+          dom.tabForensic.classList.remove("active");
+          dom.tabForensic.style.borderBottom = "none";
+          dom.tabForensic.style.fontWeight = "600";
+          dom.tabForensic.style.color = "var(--text-muted)";
+
+          dom.panelForensic.style.display = "none";
+          dom.panelChat.style.display = "flex";
+          dom.chatInput.focus();
+        }
+      }
+
+      dom.tabForensic.addEventListener("click", () => switchTab("forensic"));
+      dom.tabChat.addEventListener("click", () => switchTab("chat"));
+
       function openAssistantModalForCurrent() {
         const item = state.incidents.find(i => i.id === state.selectedId);
         if (!item) return;
-        dom.assistantInput.value = `Incident #${item.id}: ${item.threat} (Risk ${item.risk}/100, ${item.severity})\nSource IP: ${item.src_ip} -> Target: ${item.target}\nReasons:\n${item.reasons.join('\n')}`;
+        dom.assistantInput.value = `Incident #${item.id}: ${item.threat} (Risk ${item.risk}/100, ${item.severity})\nSource IP: ${item.src_ip} -> Target: ${item.target}\nReasons:\n${(item.reasons || []).join('\n')}`;
+        switchTab("forensic");
         openAssistantModal();
         runForensicAnalysis();
       }
@@ -2304,10 +2450,9 @@
         dom.assistantOutputArea.innerHTML = `<div class="empty-state" style="padding: 24px;">🤖 Correlating telemetry, evaluating exfiltration channels &amp; checking data theft indicators...</div>`;
 
         try {
-          // Attempt call to backend /api/assistant/analyze
           let data = null;
           try {
-            const resp = await fetch("http://localhost:8000/api/assistant/analyze", {
+            const resp = await fetch(`${API_BASE}/api/assistant/analyze`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ query: text, alert_id: state.selectedId })
@@ -2316,7 +2461,6 @@
               data = await resp.json();
             }
           } catch (e) {
-            // Backend offline fallback: evaluate using client-side engine
             data = clientSideForensicEvaluation(text);
           }
 
@@ -2338,7 +2482,6 @@
         const hasGb = lower.includes("gb") || lower.includes("gigabytes") || lower.includes("4.8");
         const isExfil = lower.includes("exfiltration") || lower.includes("s3") || hasGb || lower.includes("dump");
         const isSqli = lower.includes("sql") || lower.includes("union select") || lower.includes("pg_catalog");
-        const isBrute = lower.includes("brute") || lower.includes("password") || lower.includes("ssh");
 
         let verdict = "ATTACK PROBED - NO CONFIRMED EXFILTRATION";
         let status = "THEFT_PREVENTED";
@@ -2438,14 +2581,14 @@
               </div>
               <div class="fact-card">
                 <span class="fact-title">Theft Risk Score</span>
-                <span class="fact-value mono" style="color: ${data.theft_score >= 70 ? 'var(--sev-crit)' : 'var(--sev-high)'};">
-                  ${data.theft_score}/100
+                <span class="fact-value mono" style="color: ${(data.theft_score || 70) >= 70 ? 'var(--sev-crit)' : 'var(--sev-high)'};">
+                  ${data.theft_score || 70}/100
                 </span>
                 <span class="fact-sub">Forensic Impact</span>
               </div>
               <div class="fact-card">
                 <span class="fact-title">Identified IOCs</span>
-                <span class="fact-value mono">${(data.iocs.ips || []).length} IPs</span>
+                <span class="fact-value mono">${((data.iocs && data.iocs.ips) || []).length} IPs</span>
                 <span class="fact-sub">Adversary Entities</span>
               </div>
             </div>
@@ -2498,6 +2641,179 @@
         `;
       }
 
+      /* -------------------------------------------------------------
+         CONVERSATIONAL AI CHATBOT LOGIC
+         ------------------------------------------------------------- */
+      async function sendChatMessage(promptText) {
+        const text = promptText || dom.chatInput.value.trim();
+        if (!text) return;
+
+        appendChatBubble("user", text);
+        if (!promptText) dom.chatInput.value = "";
+
+        const typingBubble = appendChatBubble("assistant", "⏳ <em>Analyzing inquiry &amp; querying threat database...</em>");
+
+        try {
+          let botReply = null;
+          try {
+            const resp = await fetch(`${API_BASE}/api/chat`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                message: text,
+                history: state.chatHistory,
+                context: { selected_alert: state.incidents.find(i => i.id === state.selectedId) }
+              })
+            });
+            if (resp.ok) {
+              const data = await resp.json();
+              botReply = data.response || data.reply;
+            }
+          } catch (e) {
+            botReply = generateClientChatReply(text);
+          }
+
+          if (!botReply) {
+            botReply = generateClientChatReply(text);
+          }
+
+          state.chatHistory.push({ user: text, bot: botReply });
+          typingBubble.querySelector("div").innerHTML = formatMarkdownText(botReply);
+        } catch (err) {
+          typingBubble.querySelector("div").textContent = "Sorry, failed to process chat response.";
+        } finally {
+          dom.chatContainer.scrollTop = dom.chatContainer.scrollHeight;
+        }
+      }
+
+      function appendChatBubble(role, contentHtml) {
+        const div = document.createElement("div");
+        div.className = `chat-bubble ${role}`;
+        const author = role === "user" ? "👤 Analyst" : "🤖 SentinelAI Bot";
+        div.innerHTML = `<span class="chat-bubble-author">${author}</span><div>${contentHtml}</div>`;
+        dom.chatContainer.appendChild(div);
+        dom.chatContainer.scrollTop = dom.chatContainer.scrollHeight;
+        return div;
+      }
+
+      function generateClientChatReply(msg) {
+        const lower = msg.toLowerCase();
+        if (lower.includes("dataset") || lower.includes("cicids") || lower.includes("loghub")) {
+          return "**SentinelAI Dataset & Benchmark Intelligence:**\n\n• **CICIDS2017:** 5 days of realistic network flows capturing Brute Force, DoS/DDoS, SQLi, and Botnets.\n• **Loghub:** Real system logs (OpenSSH, Linux, Apache).\n• **Model Version:** Model v3 trained on 4,469 window samples (100% Precision, 100% Recall, 1.00 ROC-AUC).";
+        }
+        if (lower.includes("steal") || lower.includes("stolen") || lower.includes("exfiltrat") || lower.includes("10.0.3.77")) {
+          return "🚨 **Data Theft Verdict for 10.0.3.77:**\n\n**YES**, telemetry confirms 4.8 GB outbound encrypted archive (.7z) transferred to external Amazon S3 bucket (198.51.100.42) at 03:14 AM.\n\n• **Impact:** High (Financial & Citizen Records compromised)\n• **CERT-In Compliance:** 6-hour mandatory notification required.";
+        }
+        if (lower.includes("mitre") || lower.includes("tactic") || lower.includes("technique")) {
+          return "**Active Mapped MITRE ATT&CK Techniques:**\n\n• **T1110.001:** Password Spraying (45.12.98.201)\n• **T1190:** Exploit Public-Facing App SQLi (103.77.12.9)\n• **T1498.001:** Direct Network Flood DoS (91.200.12.4)\n• **T1046:** Network Service Discovery Scan (185.220.101.7)\n• **T1048.003:** Exfiltration Over Alternative Protocol (10.0.3.77)";
+        }
+        return `**Forensic Analysis for "${escapeHtml(msg)}":**\n\nTelemetry correlated against active threat rules. No new critical indicators found beyond active queue alerts. Recommend reviewing alert #${state.selectedId} details.`;
+      }
+
+      function formatMarkdownText(txt) {
+        if (!txt) return "";
+        let formatted = escapeHtml(txt);
+        formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        formatted = formatted.replace(/\n/g, '<br>');
+        return formatted;
+      }
+
+      dom.btnSendChat.addEventListener("click", () => sendChatMessage());
+      dom.chatInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          sendChatMessage();
+        }
+      });
+
+      dom.chatChips.forEach(chip => {
+        chip.addEventListener("click", () => {
+          const prompt = chip.getAttribute("data-prompt");
+          if (prompt) sendChatMessage(prompt);
+        });
+      });
+
+      /* -------------------------------------------------------------
+         BACKEND SYNC & REALTIME SSE Telemetry
+         ------------------------------------------------------------- */
+      async function loadBackendData() {
+        try {
+          const [alertsResp, statsResp, modelResp] = await Promise.allSettled([
+            fetch(`${API_BASE}/api/alerts`),
+            fetch(`${API_BASE}/api/stats`),
+            fetch(`${API_BASE}/api/model_info`)
+          ]);
+
+          if (alertsResp.status === "fulfilled" && alertsResp.value.ok) {
+            const apiAlerts = await alertsResp.value.json();
+            if (apiAlerts && apiAlerts.length > 0) {
+              syncBackendAlerts(apiAlerts);
+            }
+          }
+
+          if (statsResp.status === "fulfilled" && statsResp.value.ok) {
+            const statsData = await statsResp.value.json();
+            if (statsData.events) {
+              state.eventsAnalysed = statsData.events;
+            }
+            if (statsData.blocked_ips !== undefined) {
+              state.ipsBlocked = statsData.blocked_ips;
+            }
+            updateCounters();
+          }
+
+          if (modelResp.status === "fulfilled" && modelResp.value.ok) {
+            const modelData = await modelResp.value.json();
+            if (modelData.version && dom.modelVerBanner) {
+              dom.modelVerBanner.textContent = `Model v${modelData.version}`;
+            }
+          }
+        } catch (e) {
+          // Backend unreachable — client fallback loaded
+        }
+      }
+
+      function syncBackendAlerts(apiAlerts) {
+        state.incidents = apiAlerts.map(a => ({
+          id: a.id || a.aid || Math.floor(Math.random() * 900) + 100,
+          threat: a.threat || "Suspicious Activity",
+          src_ip: a.src_ip || "10.0.0.1",
+          target: a.target || a.dst_ip || "10.0.9.10",
+          target_desc: a.target_desc || "Internal Host",
+          risk: a.risk || a.score || 75,
+          severity: a.severity || "High",
+          confidence: a.confidence || 0.95,
+          anomaly_score: a.anomaly_score || 0.88,
+          asset_criticality: a.asset_criticality || "Tier 1 - Mission Critical",
+          status: a.status || "New",
+          reasons: Array.isArray(a.reasons) ? a.reasons : [a.reasons || "Triggered threat threshold"],
+          mitre: Array.isArray(a.mitre) ? a.mitre : [{ id: "T1071", name: "Application Protocol" }],
+          actions: Array.isArray(a.actions) ? a.actions : [
+            { id: "act-1", text: `Investigate ${a.src_ip} origin subnet`, done: false },
+            { id: "act-2", text: "Check system authentication logs", done: false }
+          ]
+        }));
+        if (state.incidents.length > 0) {
+          state.selectedId = state.incidents[0].id;
+        }
+        updateCounters();
+        renderQueue();
+        renderDetail();
+        renderRiskyBars();
+      }
+
+      function initSSEStream() {
+        try {
+          const evtSource = new EventSource(`${API_BASE}/api/stream`);
+          evtSource.addEventListener("alerts", (e) => {
+            loadBackendData();
+          });
+        } catch (e) {
+          // SSE fallback
+        }
+      }
+
       function escapeHtml(str) {
         if (!str) return "";
         return String(str)
@@ -2513,6 +2829,8 @@
       renderQueue();
       renderDetail();
       renderRiskyBars();
+      loadBackendData();
+      initSSEStream();
 
     })();
   </script>

@@ -1,0 +1,6 @@
+name,owner,criticality,description
+Payments,payments-team,5,Card and UPI payment processing
+Online Banking,web-team,5,Customer web and mobile access
+Human Resources,hr-it,3,Payroll and employee records
+Corporate IT,it-ops,3,"Email, identity, endpoints"
+Data and Analytics,data-team,3,Reporting and warehouse

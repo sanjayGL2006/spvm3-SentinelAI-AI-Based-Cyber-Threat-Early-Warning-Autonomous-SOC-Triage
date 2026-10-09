@@ -1,0 +1,153 @@
+external_ref,title,severity,asset,category,status
+F-0001,Password never expires,10,Payment Gateway,identity,resolved
+F-0002,Overly permissive firewall rule,7,A-001,misconfiguration,open
+F-0003,Access review not completed,9,A-001,process,open
+F-0004,EDR agent missing,3,Payment Gateway,detection,open
+F-0005,Access review not completed,4,A-002,process,accepted
+F-0006,Excessive role permissions,9,A-002,identity,open
+F-0007,Admin account without MFA,6,A-002,identity,open
+F-0008,Incident runbook outdated,8,A-002,process,in_progress
+F-0009,Shared service account password,6,A-002,identity,resolved
+F-0010,SIEM log source offline,8,A-002,detection,in_progress
+F-0011,Alerts not triaged within SLA,9,A-003,detection,accepted
+F-0012,EDR agent missing,7,Customer Portal,detection,in_progress
+F-0013,Incident runbook outdated,9,A-003,process,open
+F-0014,Sensitive data in logs,7,A-003,data protection,resolved
+F-0015,Unencrypted database connection,9,Customer Portal,data protection,accepted
+F-0016,Password never expires,5,Customer Portal,identity,open
+F-0017,Access review not completed,9,A-004,process,open
+F-0018,Admin account without MFA,3,Mobile API,identity,open
+F-0019,Unencrypted database connection,5,A-004,data protection,open
+F-0020,Unencrypted backups,9,A-004,data protection,resolved
+F-0021,Critical library vulnerability,9,Mobile API,vulnerability,open
+F-0022,Sensitive data in logs,10,Mobile API,data protection,open
+F-0023,Known exploited CVE not patched,9,A-004,vulnerability,open
+F-0024,Public storage permissions,8,A-005,misconfiguration,open
+F-0025,EDR agent missing,6,A-005,detection,open
+F-0026,End-of-life operating system,9,Core Banking App,vulnerability,open
+F-0027,Weak TLS configuration,4,A-005,misconfiguration,in_progress
+F-0028,Sensitive data in logs,6,A-005,data protection,open
+F-0029,Alerts not triaged within SLA,2,Core Banking App,detection,resolved
+F-0030,Unencrypted database connection,8,A-006,data protection,open
+F-0031,Unpatched remote code execution,4,A-006,vulnerability,in_progress
+F-0032,Access review not completed,9,HR Database,process,open
+F-0033,No data-loss-prevention policy,8,A-006,data protection,resolved
+F-0034,Logging disabled,2,A-006,detection,open
+F-0035,Excessive role permissions,6,HR Database,identity,open
+F-0036,Unencrypted backups,4,HR Database,data protection,open
+F-0037,Critical library vulnerability,8,Payroll System,vulnerability,open
+F-0038,Patch window overdue,2,A-007,process,in_progress
+F-0039,Logging disabled,2,Payroll System,detection,open
+F-0040,Unencrypted database connection,8,A-007,data protection,open
+F-0041,Default credentials in use,6,Payroll System,misconfiguration,in_progress
+F-0042,Excessive role permissions,4,A-007,identity,open
+F-0043,Alerts not triaged within SLA,8,Payroll System,detection,open
+F-0044,Sensitive data in logs,10,A-008,data protection,open
+F-0045,Logging disabled,3,Email Server,detection,open
+F-0046,Alerts not triaged within SLA,7,Email Server,detection,open
+F-0047,Critical library vulnerability,5,VPN Gateway,vulnerability,in_progress
+F-0048,Patch window overdue,7,A-009,process,open
+F-0049,EDR agent missing,5,A-009,detection,open
+F-0050,Unpatched remote code execution,5,VPN Gateway,vulnerability,in_progress
+F-0051,Unencrypted backups,3,A-009,data protection,open
+F-0052,End-of-life operating system,7,VPN Gateway,vulnerability,open
+F-0053,EDR agent missing,10,A-010,detection,open
+F-0054,Unencrypted database connection,10,Edge Firewall,data protection,open
+F-0055,Alerts not triaged within SLA,5,Edge Firewall,detection,open
+F-0056,Incident runbook outdated,7,A-010,process,open
+F-0057,Admin account without MFA,5,A-010,identity,open
+F-0058,End-of-life operating system,10,A-010,vulnerability,open
+F-0059,Outdated OpenSSL version,7,A-010,vulnerability,open
+F-0060,Alerts not triaged within SLA,2,A-011,detection,open
+F-0061,Unencrypted database connection,4,A-011,data protection,open
+F-0062,Open management port to internet,6,Active Directory,misconfiguration,resolved
+F-0063,Incident runbook outdated,4,A-011,process,open
+F-0064,Unpatched remote code execution,4,A-011,vulnerability,open
+F-0065,Dormant privileged account,9,A-011,identity,in_progress
+F-0066,End-of-life operating system,9,A-012,vulnerability,open
+F-0067,Access review not completed,3,SSO Provider,process,open
+F-0068,Public storage permissions,3,A-012,misconfiguration,open
+F-0069,Overly permissive firewall rule,9,A-012,misconfiguration,open
+F-0070,Excessive role permissions,7,A-012,identity,open
+F-0071,Incident runbook outdated,5,A-012,process,open
+F-0072,Known exploited CVE not patched,8,Backup Vault,vulnerability,in_progress
+F-0073,Outdated OpenSSL version,2,A-013,vulnerability,in_progress
+F-0074,Weak TLS configuration,9,A-013,misconfiguration,open
+F-0075,Incident runbook outdated,4,A-013,process,open
+F-0076,Logging disabled,9,A-013,detection,open
+F-0077,No data-loss-prevention policy,6,A-013,data protection,in_progress
+F-0078,Patch window overdue,2,A-013,process,open
+F-0079,Public storage permissions,4,Analytics Warehouse,misconfiguration,open
+F-0080,SIEM log source offline,9,A-014,detection,in_progress
+F-0081,Logging disabled,8,A-014,detection,open
+F-0082,Open management port to internet,2,A-014,misconfiguration,open
+F-0083,Admin account without MFA,5,A-015,identity,open
+F-0084,Logging disabled,3,Marketing Website,detection,open
+F-0085,No data-loss-prevention policy,6,Dev Build Server,data protection,open
+F-0086,Unencrypted backups,6,A-016,data protection,open
+F-0087,Alerts not triaged within SLA,2,Test Server,detection,open
+F-0088,No data-loss-prevention policy,4,Test Server,data protection,open
+F-0089,Excessive role permissions,4,A-017,identity,in_progress
+F-0090,Default credentials in use,8,A-017,misconfiguration,in_progress
+F-0091,Sensitive data in logs,2,Office Laptop Pool,data protection,open
+F-0092,Public storage permissions,4,Office Laptop Pool,misconfiguration,open
+F-0093,No data-loss-prevention policy,2,Office Laptop Pool,data protection,open
+F-0094,Overly permissive firewall rule,8,A-018,misconfiguration,open
+F-0095,Access review not completed,4,A-018,process,open
+F-0096,Access review not completed,8,Executive Laptops,process,resolved
+F-0097,Incident runbook outdated,6,A-019,process,open
+F-0098,Sensitive data in logs,2,A-020,data protection,open
+F-0099,Password never expires,6,A-020,identity,in_progress
+F-0100,No data-loss-prevention policy,3,Cloud Storage Bucket,data protection,open
+F-0101,Access review not completed,5,Cloud Storage Bucket,process,in_progress
+F-0102,Alerts not triaged within SLA,7,A-021,detection,open
+F-0103,Overly permissive firewall rule,9,Cloud Storage Bucket,misconfiguration,open
+F-0104,Public storage permissions,5,Cloud Storage Bucket,misconfiguration,in_progress
+F-0105,End-of-life operating system,7,A-021,vulnerability,open
+F-0106,Weak TLS configuration,3,Cloud Storage Bucket,misconfiguration,open
+F-0107,Incident runbook outdated,9,Kubernetes Cluster,process,resolved
+F-0108,Shared service account password,4,Kubernetes Cluster,identity,open
+F-0109,Critical library vulnerability,2,A-022,vulnerability,open
+F-0110,Sensitive data in logs,4,A-022,data protection,in_progress
+F-0111,Dormant privileged account,6,Kubernetes Cluster,identity,resolved
+F-0112,Incident runbook outdated,9,A-023,process,open
+F-0113,End-of-life operating system,10,A-023,vulnerability,open
+F-0114,Access review not completed,5,A-023,process,open
+F-0115,Default credentials in use,10,CRM System,misconfiguration,open
+F-0116,Unencrypted backups,10,CRM System,data protection,open
+F-0117,Open management port to internet,7,CRM System,misconfiguration,open
+F-0118,Excessive role permissions,3,Customer Support Desk,identity,resolved
+F-0119,Logging disabled,3,A-024,detection,accepted
+F-0120,Overly permissive firewall rule,2,Print Server,misconfiguration,open
+F-0121,Dormant privileged account,2,Print Server,identity,open
+F-0122,Public storage permissions,4,Print Server,misconfiguration,in_progress
+F-0123,Unencrypted database connection,8,CCTV Network,data protection,open
+F-0124,Alerts not triaged within SLA,8,A-026,detection,open
+F-0125,Sensitive data in logs,8,A-026,data protection,open
+F-0126,Unpatched remote code execution,3,A-027,vulnerability,in_progress
+F-0127,Shared service account password,9,A-027,identity,open
+F-0128,Critical library vulnerability,7,A-027,vulnerability,in_progress
+F-0129,Open management port to internet,7,A-027,misconfiguration,open
+F-0130,SIEM log source offline,9,A-027,detection,open
+F-0131,Excessive role permissions,9,A-028,identity,open
+F-0132,Open management port to internet,2,A-028,misconfiguration,in_progress
+F-0133,Logging disabled,2,A-028,detection,open
+F-0134,Unencrypted backups,6,A-028,data protection,resolved
+F-0135,Access review not completed,4,A-028,process,open
+F-0136,No data-loss-prevention policy,9,A-029,data protection,open
+F-0137,Overly permissive firewall rule,5,A-029,misconfiguration,open
+F-0138,Incident runbook outdated,3,Code Repository,process,open
+F-0139,Admin account without MFA,7,A-029,identity,in_progress
+F-0140,EDR agent missing,9,A-029,detection,open
+F-0141,Unpatched remote code execution,7,A-029,vulnerability,open
+F-0142,Unencrypted database connection,7,A-029,data protection,open
+F-0143,Critical library vulnerability,2,A-030,vulnerability,open
+F-0144,Unpatched remote code execution,8,A-030,vulnerability,in_progress
+F-9001,Exposed storage bucket,critical,Marketing Bucket,misconfiguration,open
+F-9002,Default credentials on printer,medium,Printer-22,identity,open
+F-9003,Phishing report not triaged,low,,process,open
+F-9004,,high,A-001,vulnerability,open
+F-9005,Unknown severity scale,urgent,A-002,vulnerability,open
+F-9006,Severity out of range,15,A-003,vulnerability,open
+F-0001,Password never expires,10,Payment Gateway,identity,resolved
+F-0006,Excessive role permissions,9,A-002,identity,open
