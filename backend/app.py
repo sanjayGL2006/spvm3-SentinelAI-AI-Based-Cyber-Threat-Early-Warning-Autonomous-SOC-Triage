@@ -14,8 +14,13 @@ from generate_logs import generate
 from ingest import ingest_batch, subscribe, unsubscribe, broadcast, ensure_dedup_index
 
 app = FastAPI(title="spvm3-SentinelAI - Cyber Threat Early Warning")
-app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173"],
-                   allow_methods=["GET", "POST", "PATCH"], allow_headers=["Content-Type"])
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 init_db()
 ensure_dedup_index()        # Phase 7: deduplication unique index
 STATUSES = {"New", "Investigating", "Contained", "Resolved", "False Positive"}
